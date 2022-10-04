@@ -1,0 +1,11 @@
+node_modules
+
+/.cache
+/server
+/public/build
+preferences.arc
+sam.json
+sam.yaml
+.env*
+.DS_Store
+/app/styles/app.css

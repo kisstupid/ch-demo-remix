@@ -1,0 +1,66 @@
+name: build and deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.9.1
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Env report
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Git ref:    ${{ github.ref }}"
+          echo "GH actor:   ${{ github.actor }}"
+          echo "SHA:        ${{ github.sha }}"
+          VER=`node --version`; echo "Node ver:   $VER"
+          VER=`npm --version`; echo "npm ver:    $VER"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Remix
+        run: npm run build
+
+      - name: Set AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-1
+
+      - name: Arc hydrate
+        shell: bash
+        run: npm run arc:hydrate
+
+      - name: Cp generated prisma client
+        run: |
+            rsync -av --exclude='libquery_engine*' node_modules/.prisma/ server/node_modules/.prisma
+            cp node_modules/.prisma/client/libquery_engine-linux-arm64-openssl-1.0.x.so.node server/node_modules/.prisma/client/
+           
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          envkey_SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          directory: server
+          file_name: .env
+          fail_on_empty: false
+
+      - name: Production deploy
+        if: github.ref == 'refs/heads/main'
+        run: npm run arc:deploy
