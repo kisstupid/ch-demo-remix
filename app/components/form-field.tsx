@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+import tw from 'tailwind-styled-components';
 
 interface FormFieldProps {
   htmlFor: string;
@@ -9,14 +10,7 @@ interface FormFieldProps {
   error?: string;
 }
 
-export function FormField({
-  htmlFor,
-  label,
-  type = "text",
-  value,
-  onChange = () => {},
-  error = "",
-}: FormFieldProps) {
+export function FormField({ htmlFor, label, type = 'text', value, onChange, error = '' }: FormFieldProps) {
   const [errorText, setErrorText] = useState(error);
 
   useEffect(() => {
@@ -25,23 +19,28 @@ export function FormField({
 
   return (
     <>
-      <label htmlFor={htmlFor} className="text-blue-600 font-semibold">
-        {label}
-      </label>
+      <S.Label htmlFor={htmlFor}>{label}</S.Label>
       <input
-        onChange={(e) => {
-          onChange(e);
-          setErrorText("");
-        }}
-        type={type}
         id={htmlFor}
-        name={htmlFor}
         className="w-full p-2 rounded-xl my-2"
+        type={type}
+        name={htmlFor}
         value={value}
+        onChange={(e) => {
+          onChange?.(e);
+          setErrorText('');
+        }}
       />
-      <p className="text-xs font-semibold text-center tracking-wide text-red-500 w-full">
-        {errorText || ""}
-      </p>
+      <S.ErrorText>{errorText || ''}</S.ErrorText>
     </>
   );
 }
+
+const S = {
+  ErrorText: tw.p`
+    text-xs font-semibold text-center tracking-wide text-red-500 w-full
+  `,
+  Label: tw.label`
+    text-blue-600 font-semibold
+  `,
+};

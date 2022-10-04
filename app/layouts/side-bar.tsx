@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const menuItems = [
-  { name: "Dashboard", path: "/dashboard" },
-  { name: "Clubs", path: "/club" },
-  { name: "Members", path: "/member" },
+  { name: 'Dashboard', path: '/dashboard' },
+  { name: 'Clubs', path: '/club' },
+  { name: 'Members', path: '/member' },
 ];
 
 export default function SideBar() {
