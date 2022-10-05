@@ -1,9 +1,11 @@
-import { Outlet } from "@remix-run/react";
+import { Outlet } from '@remix-run/react';
+
+import { Wrapper } from '~/layouts/wrapper';
 
 export default function DefaultLayout() {
   return (
-    <div className="h-screen w-full bg-gray-600 font-mono">
+    <Wrapper $full>
       <Outlet />
-    </div>
+    </Wrapper>
   );
 }

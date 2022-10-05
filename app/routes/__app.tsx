@@ -1,8 +1,10 @@
-import type { LoaderFunction } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
-import { Layout } from "~/components/layout";
-import SideBar from "~/layouts/side-bar";
-import { requireUserId } from "~/utils/auth.server";
+import type { LoaderFunction } from '@remix-run/node';
+import { Outlet } from '@remix-run/react';
+
+import Header from '~/layouts/header';
+import SideBar from '~/layouts/side-bar';
+import { Wrapper } from '~/layouts/wrapper';
+import { requireUserId } from '~/utils/auth.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireUserId(request);
@@ -11,9 +13,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function AppLayout() {
   return (
-    <Layout>
+    <Wrapper $full $flex="row">
       <SideBar />
-      <Outlet />
-    </Layout>
+      <Wrapper className="flex-grow p-4 pt-0">
+        <Header />
+        <Outlet />
+      </Wrapper>
+    </Wrapper>
   );
 }
