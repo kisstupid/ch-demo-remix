@@ -1,7 +1,7 @@
 import tw from 'tailwind-styled-components';
 
 interface StyledWrapperProps {
-  $full?: boolean;
+  $full?: boolean | 'view';
   $center?: boolean;
   $flex?: 'row' | 'col';
 }
@@ -14,7 +14,11 @@ interface WrapperProps extends StyledWrapperProps {
 export const StyledWrapper = tw.div<StyledWrapperProps>`
   ${(p) => (p.$flex ? 'flex' + (p.$flex === 'col' ? ' flex-col' : '') : '')}
 
-  ${(p) => (p.$full ? 'h-screen w-screen' : 'h-auto')}
+  ${({ $full }) => {
+    if (typeof $full === 'boolean' && $full) return 'h-screen w-screen';
+
+    if ($full === 'view') return 'h-full w-full';
+  }}
 
   ${(p) => (p.$center ? 'justify-center items-center' : '')}
 `;

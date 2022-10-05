@@ -112,7 +112,7 @@ export default function Login() {
 
       <S.Title>Welcome to CoderHouse!</S.Title>
       <p className="font-semibold text-slate-300">
-        {action === 'login' ? 'Log In To Give Some Vouchers!' : 'Sign Up To Get Started!'}
+        {action === 'login' ? 'Log In To Give Some Beer!' : 'Sign Up To Get Started!'}
       </p>
 
       <S.Form.Container method="POST">
